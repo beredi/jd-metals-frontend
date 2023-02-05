@@ -9,6 +9,7 @@ import {
   ContactsOutlined,
   HelpOutlined,
   HomeOutlined,
+  LogoutOutlined,
   MapOutlined,
   MenuOutlined,
   PeopleOutlined,
@@ -18,6 +19,7 @@ import {
   TimelineOutlined,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 type SelectedScene =
   | "Dashboard"
@@ -30,16 +32,25 @@ type SelectedScene =
   | "Bar Chart"
   | "Pie Chart"
   | "Line Chart"
-  | "Geography Chart";
+  | "Geography Chart"
+  | "Logout";
 
 type ItemProps = {
   title: SelectedScene;
-  to: string;
+  to?: string;
   icon: React.ReactNode;
-  selected: SelectedScene;
-  setSelected: (selected: SelectedScene) => void;
+  selected?: SelectedScene;
+  setSelected?: (selected: SelectedScene) => void;
+  onClick?: () => void;
 };
-const Item = ({ title, to, icon, selected, setSelected }: ItemProps) => {
+const Item = ({
+  title,
+  to,
+  icon,
+  selected,
+  setSelected,
+  onClick,
+}: ItemProps) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -47,11 +58,11 @@ const Item = ({ title, to, icon, selected, setSelected }: ItemProps) => {
     <MenuItem
       active={selected === title}
       style={{ color: colors.grey[100] }}
-      onClick={() => setSelected(title)}
+      onClick={setSelected ? () => setSelected(title) : onClick}
       icon={icon}
     >
       <Typography>{title}</Typography>
-      <Link to={to} />
+      {to && <Link to={to} />}
     </MenuItem>
   );
 };
@@ -60,11 +71,12 @@ export const Sidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [selected, setSelected] = useState<SelectedScene>("Dashboard");
+  const { logOut, user } = useAuthContext();
   return (
     <Box
       sx={{
         "& .pro-sidebar-inner": {
-          background: `${colors.primary[400]} !important}`,
+          background: `${colors.greenAccent[900]} !important}`,
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
@@ -73,10 +85,10 @@ export const Sidebar = () => {
           padding: "5px 35px 5px 20px !important",
         },
         "& .pro-inner-item:hover": {
-          color: "#868dfb !important",
+          color: `${colors.greenAccent[700]} !important`,
         },
         "& .pro-menu-item.active": {
-          color: "#6870fa !important",
+          color: `${colors.greenAccent[600]} !important`,
         },
       }}
     >
@@ -134,10 +146,7 @@ export const Sidebar = () => {
                     m: "10px 0 0 0",
                   }}
                 >
-                  Ed Roh
-                </Typography>
-                <Typography variant="h5" color={colors.greenAccent[500]}>
-                  VP Fancy Admin
+                  {user?.name}
                 </Typography>
               </Box>
             </Box>
@@ -255,6 +264,17 @@ export const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{
+                m: "15x 0 5px 20px",
+                paddingLeft: "26px",
+              }}
+            >
+              User actions
+            </Typography>
+            <Item title="Logout" icon={<LogoutOutlined />} onClick={logOut} />
           </Box>
         </Menu>
       </ProSidebar>
