@@ -4,15 +4,15 @@ import {
   SecurityOutlined,
 } from "@mui/icons-material";
 import { Box, Typography, useTheme } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import { Header } from "../../components/Header";
 import { mockDataTeam } from "../../data/mockData";
 import { tokens } from "../../theme";
+import { CustomDataGrid } from "../../components/CustomDataGrid";
 
 export const Team = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
   const columns: GridColDef[] = [
     {
       field: "id",
@@ -81,30 +81,15 @@ export const Team = () => {
   return (
     <Box m="20px">
       <Header title="TEAM" subtitle="Managing the team members" />
-      <Box
-        sx={{
-          m: "40px 0 0 0",
-          height: "75vh",
-          "& .MuiDataGrid-root": { border: "none" },
-          "& .MuiDataGrid-cell": { borderBottom: "none" },
+      <CustomDataGrid
+        columns={columns}
+        rows={mockDataTeam}
+        customSx={{
           "& .name-column--cell": {
             color: colors.greenAccent[300],
           },
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: colors.blueAccent[700],
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-virtualScroller": {
-            backgroundColor: colors.primary[400],
-          },
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "none",
-            backgroundColor: colors.blueAccent[700],
-          },
         }}
-      >
-        <DataGrid rows={mockDataTeam} columns={columns} />
-      </Box>
+      />
     </Box>
   );
 };
