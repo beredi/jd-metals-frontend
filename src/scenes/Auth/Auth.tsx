@@ -12,6 +12,9 @@ import { Calendar } from "../Calendar/Calendar";
 import { FAQ } from "../FAQ/FAQ";
 import { Login } from "../Login/Login";
 import { Projects } from "../Projects/Projects";
+import { Users } from "../Users/Users";
+import { SiteConfig } from "../SiteConfig/SiteConfig";
+import { ProjectConfig } from "../Projects/ProjectConfig";
 
 export const Auth = () => {
   const { isAuthenticated } = useAuthContext();
@@ -32,6 +35,9 @@ export const Auth = () => {
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/project-config" element={<ProjectConfig />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/site-config" element={<SiteConfig />} />
           </Routes>
         </main>
       </div>

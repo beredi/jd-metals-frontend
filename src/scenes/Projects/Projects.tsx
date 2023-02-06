@@ -62,8 +62,6 @@ export const Projects = () => {
     },
   ];
 
-  console.log(projects);
-
   return isLoading ? (
     <LoadingIndicator />
   ) : (

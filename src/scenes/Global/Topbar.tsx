@@ -7,6 +7,7 @@ import {
   LightModeOutlined,
   DarkModeOutlined,
 } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 export const Topbar = () => {
   const theme = useTheme();
@@ -22,9 +23,11 @@ export const Topbar = () => {
             <LightModeOutlined />
           )}
         </IconButton>
-        <IconButton>
-          <SettingsOutlined />
-        </IconButton>
+        <Link to={"/site-config"}>
+          <IconButton>
+            <SettingsOutlined />
+          </IconButton>
+        </Link>
         <IconButton>
           <PersonOutlined />
         </IconButton>

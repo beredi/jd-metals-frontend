@@ -16,7 +16,7 @@ export const LoadingIndicator = () => {
       }}
     >
       <CircularProgress />
-      <Typography variant="h6" color={colors.grey[400]}>
+      <Typography variant="h6" color={colors.grey[400]} sx={{ marginLeft: 3 }}>
         {t("loading")}
       </Typography>
     </Box>

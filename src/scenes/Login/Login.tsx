@@ -196,7 +196,7 @@ export const Login = () => {
               </Box>
               {loginError && (
                 <Typography variant="h5" color={colors.redAccent[500]}>
-                  {t("invalidCrendentials")}
+                  {t("invalidCredentials")}
                 </Typography>
               )}
               <Button

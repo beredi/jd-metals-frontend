@@ -199,7 +199,6 @@ export const useMode = () => {
   const getColorMode = localStorage.getItem(
     "colorMode"
   ) as unknown as ThemeMode;
-  console.log(getColorMode);
   const [mode, setMode] = useState<ThemeMode>(getColorMode ?? "light");
   const colorMode: { toggleColorMode: () => void } = useMemo(
     () => ({

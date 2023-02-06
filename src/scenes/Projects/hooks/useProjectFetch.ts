@@ -5,6 +5,9 @@ export const useProjectFetch = () => {
   const getAllProjects = () => {
     return axiosInstance.get("api/projects");
   };
+  const getAllProjectTypes = () => {
+    return axiosInstance.get("api/project-types");
+  };
 
-  return { getAllProjects };
+  return { getAllProjects, getAllProjectTypes };
 };

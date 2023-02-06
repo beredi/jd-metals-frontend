@@ -3,74 +3,18 @@ import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import React, { useState } from "react";
 import { Menu, MenuItem, ProSidebar } from "react-pro-sidebar";
-import {
-  BarChartOutlined,
-  CalendarTodayOutlined,
-  ContactsOutlined,
-  HelpOutlined,
-  HomeOutlined,
-  LogoutOutlined,
-  MapOutlined,
-  MenuOutlined,
-  PeopleOutlined,
-  PersonOutlined,
-  PieChartOutlined,
-  ReceiptOutlined,
-  TimelineOutlined,
-} from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { LogoutOutlined, MenuOutlined } from "@mui/icons-material";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { navItems } from "./constants/navItems";
+import { NavItem } from "./components/NavItem";
+import { useSiteConfigContext } from "../../hooks/useSiteConfigContext";
 
-type SelectedScene =
-  | "Dashboard"
-  | "Manage Team"
-  | "Contacts Information"
-  | "Invoices Balances"
-  | "Profile Form"
-  | "Calendar"
-  | "FAQ Page"
-  | "Bar Chart"
-  | "Pie Chart"
-  | "Line Chart"
-  | "Geography Chart"
-  | "Logout";
-
-type ItemProps = {
-  title: SelectedScene;
-  to?: string;
-  icon: React.ReactNode;
-  selected?: SelectedScene;
-  setSelected?: (selected: SelectedScene) => void;
-  onClick?: () => void;
-};
-const Item = ({
-  title,
-  to,
-  icon,
-  selected,
-  setSelected,
-  onClick,
-}: ItemProps) => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-
-  return (
-    <MenuItem
-      active={selected === title}
-      style={{ color: colors.grey[100] }}
-      onClick={setSelected ? () => setSelected(title) : onClick}
-      icon={icon}
-    >
-      <Typography>{title}</Typography>
-      {to && <Link to={to} />}
-    </MenuItem>
-  );
-};
 export const Sidebar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  const [selected, setSelected] = useState<SelectedScene>("Dashboard");
+  const [selected, setSelected] = useState<string>("Dashboard");
+  const { siteConfig } = useSiteConfigContext();
   const { logOut, user } = useAuthContext();
   return (
     <Box
@@ -112,7 +56,7 @@ export const Sidebar = () => {
                 }}
               >
                 <Typography variant="h3" color={colors.grey[100]}>
-                  ADMINS
+                  {siteConfig && siteConfig.name}
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlined />
@@ -154,127 +98,47 @@ export const Sidebar = () => {
 
           <Box
             sx={{
-              paddingLeft: isCollapsed ? undefined : "10%",
+              paddingLeft: isCollapsed ? undefined : 1,
+              paddingRight: isCollapsed ? "10%" : undefined,
             }}
           >
-            <Item
-              title={"Dashboard"}
-              to={"/"}
-              icon={<HomeOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{
-                m: "15x 0 5px 20px",
-                paddingLeft: "26px",
-              }}
-            >
-              Data
-            </Typography>
-            <Item
-              title={"Manage Team"}
-              to={"/team"}
-              icon={<PeopleOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title={"Contacts Information"}
-              to={"/contacts"}
-              icon={<ContactsOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title={"Invoices Balances"}
-              to={"/invoices"}
-              icon={<ReceiptOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{
-                m: "15x 0 5px 20px",
-                paddingLeft: "26px",
-              }}
-            >
-              Pages
-            </Typography>
-            <Item
-              title={"Profile Form"}
-              to={"/form"}
-              icon={<PersonOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title={"Calendar"}
-              to={"/calendar"}
-              icon={<CalendarTodayOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title={"FAQ Page"}
-              to={"/faq"}
-              icon={<HelpOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{
-                m: "15x 0 5px 20px",
-                paddingLeft: "26px",
-              }}
-            >
-              Charts
-            </Typography>
-            <Item
-              title={"Bar Chart"}
-              to={"/bar"}
-              icon={<BarChartOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title={"Pie Chart"}
-              to={"/pie"}
-              icon={<PieChartOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title={"Line Chart"}
-              to={"/line"}
-              icon={<TimelineOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title={"Geography Chart"}
-              to={"/geography"}
-              icon={<MapOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{
-                m: "15x 0 5px 20px",
-                paddingLeft: "26px",
-              }}
-            >
-              User actions
-            </Typography>
-            <Item title="Logout" icon={<LogoutOutlined />} onClick={logOut} />
+            {navItems.map((item, key) => {
+              return (
+                <Box key={"group" + key}>
+                  {item.showGroupName && (
+                    <Typography
+                      variant="h6"
+                      color={colors.grey[300]}
+                      sx={{
+                        m: "10px 0 5px 20px",
+                      }}
+                    >
+                      {item.groupName}
+                    </Typography>
+                  )}
+                  {item.items.map((navItem, key) => {
+                    return (
+                      <NavItem
+                        key={"item" + key}
+                        title={navItem.title}
+                        to={navItem.to ?? undefined}
+                        onClick={navItem.onClick ?? undefined}
+                        icon={navItem.icon}
+                        selected={selected}
+                        setSelected={setSelected}
+                      />
+                    );
+                  })}
+                </Box>
+              );
+            })}
+            <Box sx={{ marginTop: "25px" }}>
+              <NavItem
+                title="Logout"
+                icon={<LogoutOutlined />}
+                onClick={logOut}
+              />
+            </Box>
           </Box>
         </Menu>
       </ProSidebar>
