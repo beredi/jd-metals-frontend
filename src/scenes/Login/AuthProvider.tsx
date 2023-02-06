@@ -4,6 +4,7 @@ import { LoginForm, LoginResponse } from "../../types/Login";
 import { User } from "../../types/User";
 import axios from "axios";
 import { API_BASE_URL } from "../../config";
+import { useFetch } from "../../hooks/useFetch";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<boolean>(false);
+  const axiosInstance = useFetch();
 
   const logIn = (loginCredentials: LoginForm) => {
     setIsLoading(true);
@@ -23,7 +25,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         password: loginCredentials.password,
       })
       .then((response) => {
-        console.log(response);
         const data = response.data as unknown as LoginResponse;
         if (loginCredentials.remember) {
           localStorage.setItem("jwtToken", data.AccessToken);
@@ -49,12 +50,35 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setAuthToken(null);
   };
 
+  const getUserByEmail = (email: string) => {
+    setIsLoading(true);
+    axiosInstance
+      .post("api/getUserByEmail", { email: email })
+      .then((response) => {
+        const data = response.data.data as unknown as User;
+        setUser(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => setIsLoading(false));
+  };
+
   const checkLoggedIn = () => {
     const token = localStorage.getItem("jwtToken");
-    if (token !== null && token !== undefined && token !== "") {
+    const userEmail = localStorage.getItem("userEmail");
+
+    if (
+      token !== null &&
+      token !== undefined &&
+      token !== "" &&
+      userEmail !== null &&
+      userEmail !== undefined &&
+      userEmail !== ""
+    ) {
       setAuthToken(token);
       setIsAuthenticated(true);
-      //TODO: Get user by email
+      getUserByEmail(userEmail);
     }
   };
 
