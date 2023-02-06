@@ -7,8 +7,14 @@ interface Props {
   columns: GridColumns;
   rows: GridRowsProp;
   customSx?: Object;
+  checkbox?: boolean;
 }
-export const CustomDataGrid = ({ rows, columns, customSx }: Props) => {
+export const CustomDataGrid = ({
+  rows,
+  columns,
+  customSx,
+  checkbox = false,
+}: Props) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (
@@ -32,10 +38,13 @@ export const CustomDataGrid = ({ rows, columns, customSx }: Props) => {
           borderTop: "none",
           backgroundColor: colors.greenAccent[900],
         },
+        "& .MuiCheckbox-root": {
+          color: `${colors.greenAccent[200]} !important`,
+        },
         ...customSx,
       }}
     >
-      <DataGrid rows={rows} columns={columns} />
+      <DataGrid rows={rows} columns={columns} checkboxSelection={checkbox} />
     </Box>
   );
 };

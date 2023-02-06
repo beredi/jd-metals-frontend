@@ -9,4 +9,7 @@ export const en = {
   invalidCrendentials:
     "Login failed. Check your credentials or try again later.",
   loading: "Loading...",
+  projects: "Projects",
+  projectsSubtitle: "Managing projects for company",
+  projectsNoLoaded: "There is not any project.",
 };

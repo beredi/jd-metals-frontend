@@ -1,14 +1,8 @@
-import {
-  AccountCircle,
-  CheckBoxOutlined,
-  LoginOutlined,
-  Password,
-} from "@mui/icons-material";
+import { AccountCircle, LoginOutlined, Password } from "@mui/icons-material";
 import {
   Box,
   Button,
   Checkbox,
-  CircularProgress,
   FormControlLabel,
   InputAdornment,
   styled,
@@ -16,12 +10,13 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material";
-import { Formik, FormikValues, useFormik } from "formik";
+import { Formik, FormikValues } from "formik";
 import { tokens } from "../../theme";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
 import { LoginForm } from "../../types/Login";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { LoadingIndicator } from "../../components/LoadingIndicator";
 
 const validationSchema = yup.object().shape({
   email: yup.string().email("Invaild email.").required("Required"),
@@ -70,19 +65,7 @@ export const Login = () => {
   };
 
   return isLoading ? (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <CircularProgress />
-      <Typography variant="h6" color={colors.grey[400]}>
-        {t("loading")}
-      </Typography>
-    </Box>
+    <LoadingIndicator />
   ) : (
     <Box
       sx={{
