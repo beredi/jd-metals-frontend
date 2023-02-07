@@ -3,6 +3,7 @@ import { Box, SxProps, useTheme } from "@mui/material";
 import { tokens } from "../theme";
 import { GridRowsProp } from "@mui/x-data-grid/models/gridRows";
 import { Theme } from "@mui/material/styles";
+import { useState } from "react";
 
 interface Props {
   columns: GridColumns;
@@ -24,6 +25,7 @@ export const CustomDataGrid = ({
 }: Props) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [pageSize, setPageSize] = useState<number>(10);
   return (
     <Box
       sx={{
@@ -45,13 +47,16 @@ export const CustomDataGrid = ({
           borderTop: "none",
           backgroundColor: colors.greenAccent[900],
         },
-        "& .MuiCheckbox-root": {
-          color: `${colors.greenAccent[100]} !important`,
+        "& .MuiCheckbox-root.MuiCheckbox-colorPrimary": {
+          color: `${colors.primary[100]} !important`,
         },
         ...customSx,
       }}
     >
       <DataGrid
+        rowsPerPageOptions={[5, 10, 20]}
+        pageSize={pageSize}
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
         density="comfortable"
         rows={rows}
         columns={columns}
@@ -70,8 +75,8 @@ export const CustomDataGrid = ({
           ...componentsProps,
         }}
         sx={{
-          "& .MuiButtonBase-root": {
-            color: `${colors.greenAccent[700]} !important`,
+          "& button.MuiButtonBase-root": {
+            color: `${colors.greenAccent[400]} !important`,
           },
           ...objectSx,
         }}

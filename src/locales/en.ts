@@ -33,5 +33,8 @@ export const en = {
   loadFailed: "Loading records failed.",
   updateFailed: "Updating records failed.",
   createFailed: "Creating records failed.",
+  deleteFailed: "Deleting records failed.",
   loggedInSuccess: "Logged in successfully.",
+  addNewProject: "Add new project",
+  bulkDeleteSuccess: "Records were successfully deleted.",
 };

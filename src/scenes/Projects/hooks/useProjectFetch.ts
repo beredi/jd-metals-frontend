@@ -9,5 +9,9 @@ export const useProjectFetch = () => {
     return axiosInstance.get("api/project-types");
   };
 
-  return { getAllProjects, getAllProjectTypes };
+  const bulkDeleteProjects = (ids: number[]) => {
+    return axiosInstance.post("api/projects/bulkDelete", { ids: ids });
+  };
+
+  return { getAllProjects, getAllProjectTypes, bulkDeleteProjects };
 };

@@ -66,6 +66,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       })
       .catch((error) => {
         console.log(error);
+        setNotification("error", "Couldn't get user");
       })
       .finally(() => setIsLoading(false));
   };
