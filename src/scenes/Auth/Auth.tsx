@@ -15,6 +15,7 @@ import { Projects } from "../Projects/Projects";
 import { Users } from "../Users/Users";
 import { SiteConfig } from "../SiteConfig/SiteConfig";
 import { ProjectConfig } from "../Projects/ProjectConfig";
+import { Customers } from "../Customers/Customers";
 
 export const Auth = () => {
   const { isAuthenticated } = useAuthContext();
@@ -36,6 +37,7 @@ export const Auth = () => {
             <Route path="/faq" element={<FAQ />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/project-config" element={<ProjectConfig />} />
+            <Route path="/customers" element={<Customers />} />
             <Route path="/users" element={<Users />} />
             <Route path="/site-config" element={<SiteConfig />} />
           </Routes>

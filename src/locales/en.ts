@@ -14,6 +14,7 @@ export const en = {
   projectsNoLoaded: "No projects were loaded.",
   usersNoLoaded: "No users were loaded.",
   projectTypesNoLoaded: "No project types were loaded.",
+  customersNoLoaded: "No customers were loaded.",
   dashboard: "Dashboard",
   siteConfig: "Site config",
   siteConfigSub: "Information about your company",
@@ -27,4 +28,6 @@ export const en = {
   projectConfigSub: "Configure project types",
   projectTypes: "Project types",
   update: "Update",
+  customers: "Customers",
+  customersSub: "Manage your customers.",
 };

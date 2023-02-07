@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useProjectFetch } from "./hooks/useProjectFetch";
 import { LoadingIndicator } from "../../components/LoadingIndicator";
 import { Project } from "./types/Project";
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { Box, Typography } from "@mui/material";
 import { Header } from "../../components/Header";
 import { useTranslation } from "react-i18next";
@@ -68,7 +68,12 @@ export const Projects = () => {
     <Box m="20px">
       <Header title={t("projects")} subtitle={t("projectsSubtitle")} />
       {projects ? (
-        <CustomDataGrid columns={columns} rows={projects} checkbox={true} />
+        <CustomDataGrid
+          columns={columns}
+          rows={projects}
+          checkbox={true}
+          components={{ Toolbar: GridToolbar }}
+        />
       ) : (
         <Typography variant="h3">{t("projectsNoLoaded")}</Typography>
       )}

@@ -31,11 +31,11 @@ function App() {
         <ThemeProvider
           theme={theme as Partial<Theme> | ((outerTheme: Theme) => Theme)}
         >
-          <SiteConfigProvider>
-            <AuthProvider>
+          <AuthProvider>
+            <SiteConfigProvider>
               <Auth />
-            </AuthProvider>
-          </SiteConfigProvider>
+            </SiteConfigProvider>
+          </AuthProvider>
         </ThemeProvider>
       </ColorModeContext.Provider>
     </Suspense>

@@ -1,19 +1,26 @@
 import { DataGrid, GridColumns } from "@mui/x-data-grid";
-import { Box, useTheme } from "@mui/material";
+import { Box, SxProps, useTheme } from "@mui/material";
 import { tokens } from "../theme";
 import { GridRowsProp } from "@mui/x-data-grid/models/gridRows";
+import { Theme } from "@mui/material/styles";
 
 interface Props {
   columns: GridColumns;
   rows: GridRowsProp;
   customSx?: Object;
-  checkbox?: boolean;
+  checkboxSelection?: boolean;
+  componentsProps?: Object;
+  objectSx?: SxProps<Theme>;
+  [x: string]: any;
 }
 export const CustomDataGrid = ({
   rows,
   columns,
   customSx,
   checkbox = false,
+  componentsProps,
+  objectSx,
+  ...props
 }: Props) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -39,12 +46,37 @@ export const CustomDataGrid = ({
           backgroundColor: colors.greenAccent[900],
         },
         "& .MuiCheckbox-root": {
-          color: `${colors.greenAccent[200]} !important`,
+          color: `${colors.greenAccent[100]} !important`,
         },
         ...customSx,
       }}
     >
-      <DataGrid rows={rows} columns={columns} checkboxSelection={checkbox} />
+      <DataGrid
+        density="comfortable"
+        rows={rows}
+        columns={columns}
+        checkboxSelection={checkbox}
+        componentsProps={{
+          panel: {
+            sx: {
+              "& .MuiButton-root": {
+                color: `${colors.grey[200]} !important`,
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: `${colors.primary[300]} !important`,
+              },
+            },
+          },
+          ...componentsProps,
+        }}
+        sx={{
+          "& .MuiButtonBase-root": {
+            color: `${colors.greenAccent[700]} !important`,
+          },
+          ...objectSx,
+        }}
+        {...props}
+      />
     </Box>
   );
 };

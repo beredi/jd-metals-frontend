@@ -5,6 +5,7 @@ import {
   HelpOutlined,
   HomeOutlined,
   ListOutlined,
+  PeopleAltOutlined,
   PeopleOutlined,
   PersonOutlined,
   ReceiptOutlined,
@@ -52,44 +53,13 @@ export const navItems: navGroupType[] = [
     ],
   },
   {
-    groupName: "Data",
+    groupName: "Customers",
     showGroupName: true,
     items: [
       {
-        title: "Manage Team",
-        to: "/team",
-        icon: <PeopleOutlined />,
-      },
-      {
-        title: "Contacts Information",
-        to: "/contacts",
-        icon: <ContactsOutlined />,
-      },
-      {
-        title: "Invoices Balances",
-        to: "/invoices",
-        icon: <ReceiptOutlined />,
-      },
-    ],
-  },
-  {
-    groupName: "Pages",
-    showGroupName: true,
-    items: [
-      {
-        title: "Profile Form",
-        to: "/form",
-        icon: <PersonOutlined />,
-      },
-      {
-        title: "Calendar",
-        to: "/calendar",
-        icon: <CalendarTodayOutlined />,
-      },
-      {
-        title: "FAQ Page",
-        to: "/faq",
-        icon: <HelpOutlined />,
+        title: "Customers",
+        to: "/customers",
+        icon: <PeopleAltOutlined />,
       },
     ],
   },

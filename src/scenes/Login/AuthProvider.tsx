@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
         setIsAuthenticated(true);
         setUser(data.User);
+        setAuthToken(data.AccessToken);
         if (loginError) {
           setLoginError(false);
         }
