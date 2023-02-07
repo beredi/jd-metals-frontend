@@ -5,6 +5,8 @@ import { User } from "../../types/User";
 import axios from "axios";
 import { API_BASE_URL } from "../../config";
 import { useFetch } from "../../hooks/useFetch";
+import { useNotificationsContext } from "../../hooks/useNotificationsContext";
+import { useTranslation } from "react-i18next";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -15,6 +17,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<boolean>(false);
+  const { setNotification } = useNotificationsContext();
+  const { t } = useTranslation();
   const axiosInstance = useFetch();
 
   const logIn = (loginCredentials: LoginForm) => {
@@ -36,6 +40,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         if (loginError) {
           setLoginError(false);
         }
+        setNotification("success", t("loggedInSuccess"));
       })
       .catch((error) => {
         console.log(error);
@@ -80,6 +85,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setAuthToken(token);
       setIsAuthenticated(true);
       getUserByEmail(userEmail);
+      setNotification("success", t("loggedInSuccess"));
     }
   };
 

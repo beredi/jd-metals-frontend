@@ -8,12 +8,13 @@ import { CustomDataGrid } from "../../components/CustomDataGrid";
 import { Customer } from "../../types/Customer";
 import { FactoryOutlined, PersonOutlined } from "@mui/icons-material";
 import { useCustomersFetch } from "./hooks/useCustomersFetch";
-import { Project } from "../Projects/types/Project";
+import { useNotificationsContext } from "../../hooks/useNotificationsContext";
 
 export const Customers = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [customers, setCustomers] = useState<Customer[] | undefined>(undefined);
+  const { setNotification } = useNotificationsContext();
   const { getAllCustomers } = useCustomersFetch();
 
   useEffect(() => {
@@ -23,7 +24,10 @@ export const Customers = () => {
         const customers = response.data.data as Customer[];
         setCustomers(customers);
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        console.log(error);
+        setNotification("error", t("loadFailed"));
+      })
       .finally(() => setIsLoading(false));
   }, []);
 

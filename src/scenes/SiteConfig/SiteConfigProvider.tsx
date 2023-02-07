@@ -3,15 +3,19 @@ import { useEffect, useState } from "react";
 import { SiteConfigPatch, SiteConfigType } from "./types/SiteConfigTypes";
 import { useFetch } from "../../hooks/useFetch";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { useNotificationsContext } from "../../hooks/useNotificationsContext";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   children: React.ReactNode;
 }
 
 export const SiteConfigProvider = ({ children }: Props) => {
+  const { t } = useTranslation();
   const { isAuthenticated } = useAuthContext();
   const [siteConfig, setSiteConfig] = useState<SiteConfigType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { setNotification } = useNotificationsContext();
   const axiosInstance = useFetch();
   useEffect(() => {
     if (isAuthenticated) {
@@ -40,7 +44,10 @@ export const SiteConfigProvider = ({ children }: Props) => {
         const siteConfig = response.data.data as SiteConfigType;
         setSiteConfig(siteConfig);
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        console.log(error);
+        setNotification("error", t("updateFailed"));
+      })
       .finally(() => setIsLoading(false));
   };
 

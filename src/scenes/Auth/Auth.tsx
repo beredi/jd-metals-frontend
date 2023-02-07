@@ -1,5 +1,5 @@
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { CssBaseline } from "@mui/material";
+import { Alert, CssBaseline, SlideProps, Snackbar } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import { Sidebar } from "../Global/Sidebar";
 import { Topbar } from "../Global/Topbar";
@@ -16,9 +16,15 @@ import { Users } from "../Users/Users";
 import { SiteConfig } from "../SiteConfig/SiteConfig";
 import { ProjectConfig } from "../Projects/ProjectConfig";
 import { Customers } from "../Customers/Customers";
+import { useNotificationsContext } from "../../hooks/useNotificationsContext";
+import Slide from "@mui/material/Slide";
 
+const SlideTransition = ({ children, ...props }: SlideProps) => {
+  return <Slide children={children} {...props} direction="left" />;
+};
 export const Auth = () => {
   const { isAuthenticated } = useAuthContext();
+  const { open, message, severity, handleClose } = useNotificationsContext();
 
   return isAuthenticated ? (
     <>
@@ -43,6 +49,20 @@ export const Auth = () => {
           </Routes>
         </main>
       </div>
+      <Snackbar
+        open={open}
+        autoHideDuration={2000}
+        onClose={handleClose}
+        TransitionComponent={SlideTransition}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        sx={{
+          "& .MuiAlert-message": {
+            fontSize: "15px",
+          },
+        }}
+      >
+        <Alert severity={severity}>{message}</Alert>
+      </Snackbar>
     </>
   ) : (
     <Login />

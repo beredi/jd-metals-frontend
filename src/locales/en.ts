@@ -30,4 +30,8 @@ export const en = {
   update: "Update",
   customers: "Customers",
   customersSub: "Manage your customers.",
+  loadFailed: "Loading records failed.",
+  updateFailed: "Updating records failed.",
+  createFailed: "Creating records failed.",
+  loggedInSuccess: "Logged in successfully.",
 };

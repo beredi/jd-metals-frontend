@@ -1,6 +1,6 @@
-import { LoginForm } from "./../types/Login";
+import { LoginForm } from "../types/Login";
 import { createContext } from "react";
-import { User } from "./../types/User";
+import { User } from "../types/User";
 interface AuthContextProps {
   isAuthenticated: boolean;
   authToken: string | null;

@@ -7,11 +7,13 @@ import { Box, Typography } from "@mui/material";
 import { Header } from "../../components/Header";
 import { useTranslation } from "react-i18next";
 import { CustomDataGrid } from "../../components/CustomDataGrid";
+import { useNotificationsContext } from "../../hooks/useNotificationsContext";
 
 export const Projects = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [projects, setProjects] = useState<Project[] | undefined>(undefined);
+  const { setNotification } = useNotificationsContext();
   const { getAllProjects } = useProjectFetch();
 
   useEffect(() => {
@@ -21,7 +23,10 @@ export const Projects = () => {
         const projects = response.data.data as Project[];
         setProjects(projects);
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        console.log(error);
+        setNotification("error", t("loadFailed"));
+      })
       .finally(() => setIsLoading(false));
   }, []);
 

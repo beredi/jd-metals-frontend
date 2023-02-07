@@ -7,10 +7,12 @@ import { ProjectType } from "./types/Project";
 import { LoadingIndicator } from "../../components/LoadingIndicator";
 import { GridColDef } from "@mui/x-data-grid";
 import { CustomDataGrid } from "../../components/CustomDataGrid";
+import { useNotificationsContext } from "../../hooks/useNotificationsContext";
 
 export const ProjectTypes = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { setNotification } = useNotificationsContext();
   const [projectTypes, setProjectTypes] = useState<ProjectType[] | undefined>(
     undefined
   );
@@ -23,7 +25,10 @@ export const ProjectTypes = () => {
         const projectTypes = response.data.data as ProjectType[];
         setProjectTypes(projectTypes);
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        console.log(error);
+        setNotification("error", t("loadFailed"));
+      })
       .finally(() => setIsLoading(false));
   }, []);
 

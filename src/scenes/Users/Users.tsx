@@ -7,11 +7,13 @@ import { useTranslation } from "react-i18next";
 import { CustomDataGrid } from "../../components/CustomDataGrid";
 import { useUserFetch } from "./hooks/useUserFetch";
 import { User } from "../../types/User";
+import { useNotificationsContext } from "../../hooks/useNotificationsContext";
 
 export const Users = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [users, setUsers] = useState<User[] | undefined>(undefined);
+  const { setNotification } = useNotificationsContext();
   const { getAllUsers } = useUserFetch();
 
   useEffect(() => {
@@ -21,7 +23,10 @@ export const Users = () => {
         const users = response.data.data as User[];
         setUsers(users);
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        console.log(error);
+        setNotification("error", t("loadFailed"));
+      })
       .finally(() => setIsLoading(false));
   }, []);
 

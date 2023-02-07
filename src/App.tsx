@@ -9,6 +9,7 @@ import { en } from "./locales/en";
 import { rs } from "./locales/rs";
 import { Auth } from "./scenes/Auth/Auth";
 import { SiteConfigProvider } from "./scenes/SiteConfig/SiteConfigProvider";
+import { NotificationsProvider } from "./components/NotificationsProvider";
 
 i18next.use(initReactI18next).init({
   resources: {
@@ -31,11 +32,13 @@ function App() {
         <ThemeProvider
           theme={theme as Partial<Theme> | ((outerTheme: Theme) => Theme)}
         >
-          <AuthProvider>
-            <SiteConfigProvider>
-              <Auth />
-            </SiteConfigProvider>
-          </AuthProvider>
+          <NotificationsProvider>
+            <AuthProvider>
+              <SiteConfigProvider>
+                <Auth />
+              </SiteConfigProvider>
+            </AuthProvider>
+          </NotificationsProvider>
         </ThemeProvider>
       </ColorModeContext.Provider>
     </Suspense>
