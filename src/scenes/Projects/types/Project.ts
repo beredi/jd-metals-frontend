@@ -23,6 +23,11 @@ export type ProjectCreate = {
   customer_id?: number;
 };
 
+export const initialProjectType = {
+  name: "",
+};
+
 export type ProjectType = {
+  id?: number;
   name: string;
 };

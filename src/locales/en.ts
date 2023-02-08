@@ -56,4 +56,6 @@ export const en = {
   details: "Details",
   showHideDetails: "Show / Hide Details",
   delete: "Delete",
+  addNewProjectType: "Add new project type",
+  editProjectType: "Edit project type",
 };

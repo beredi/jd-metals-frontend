@@ -163,7 +163,6 @@ export const Customers = () => {
             columns={columns}
             rows={customers}
             checkbox={true}
-            onD
             components={{
               Toolbar: CustomGridToolbar,
             }}

@@ -21,6 +21,7 @@ export const Sidebar = () => {
       sx={{
         "& .pro-sidebar-inner": {
           background: `${colors.greenAccent[900]} !important}`,
+          height: "100%",
         },
         "& .pro-sidebar.collapsed": {
           width: "100px !important",
