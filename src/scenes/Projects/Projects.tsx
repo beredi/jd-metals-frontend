@@ -97,6 +97,8 @@ export const Projects = () => {
     },
   ];
 
+  console.log("projects", projects);
+
   const menuItems: CustomMenuItem[] = [
     {
       title: t("addNew") ?? "",

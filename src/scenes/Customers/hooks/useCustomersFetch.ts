@@ -23,5 +23,29 @@ export const useCustomersFetch = () => {
     return axiosInstance.post(`api/customers/${customer.id}`, body);
   };
 
-  return { getAllCustomers, createCustomer, bulkDeleteCustomers, editCustomer };
+  const getCustomer = (id: number) => {
+    return axiosInstance.get(`api/customers/${id}`);
+  };
+
+  const getProjectForCustomer = (customerId: number) => {
+    return axiosInstance.post("api/customers/getProjectsForCustomer", {
+      customerId: customerId,
+    });
+  };
+
+  const deleteCustomer = (customerId: number) => {
+    return axiosInstance.post(`api/customers/${customerId}`, {
+      _method: "delete",
+    });
+  };
+
+  return {
+    getAllCustomers,
+    createCustomer,
+    bulkDeleteCustomers,
+    editCustomer,
+    getCustomer,
+    getProjectForCustomer,
+    deleteCustomer,
+  };
 };

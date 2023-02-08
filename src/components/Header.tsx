@@ -22,9 +22,11 @@ export const Header = ({ title, subtitle }: Props) => {
       >
         {title}
       </Typography>
-      <Typography variant="h5" color={colors.greenAccent[400]}>
-        {subtitle}
-      </Typography>
+      {subtitle && (
+        <Typography variant="h5" color={colors.greenAccent[400]}>
+          {subtitle}
+        </Typography>
+      )}
     </Box>
   );
 };

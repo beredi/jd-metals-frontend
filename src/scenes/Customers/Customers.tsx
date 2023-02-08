@@ -21,6 +21,7 @@ import {
 } from "../../components/CustomGridToolbar";
 import { AddNewCustomerDialog } from "./components/AddNewCustomerDialog";
 import { initialCustomer } from "./types/Customer";
+import { useNavigate } from "react-router-dom";
 
 export const Customers = () => {
   const { t } = useTranslation();
@@ -31,6 +32,7 @@ export const Customers = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [selectedItems, setSelectedItems] = useState<GridSelectionModel>([]);
+  const navigate = useNavigate();
 
   const loadCustomers = () => {
     setIsLoading(true);
@@ -161,6 +163,7 @@ export const Customers = () => {
             columns={columns}
             rows={customers}
             checkbox={true}
+            onD
             components={{
               Toolbar: CustomGridToolbar,
             }}
@@ -171,6 +174,9 @@ export const Customers = () => {
                 menuItems,
               },
             }}
+            onRowDoubleClick={(rowData: Customer) =>
+              navigate(`/customers/${rowData.id}`)
+            }
             selectionModel={selectedItems}
             onSelectionModelChange={(newItems: GridSelectionModel) => {
               setSelectedItems(newItems);

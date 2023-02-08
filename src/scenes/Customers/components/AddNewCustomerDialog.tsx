@@ -279,7 +279,7 @@ export const AddNewCustomerDialog = ({
                 }}
               >
                 <SubmitSuccessButton
-                  title={customerData.id ? t("edit") : t("addNew")}
+                  title={customerData.id ? t("update") : t("addNew")}
                   icon={customerData.id ? <Edit /> : <Add />}
                   onClick={submitForm}
                 />

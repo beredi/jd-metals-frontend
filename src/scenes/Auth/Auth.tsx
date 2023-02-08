@@ -18,6 +18,7 @@ import { ProjectConfig } from "../Projects/ProjectConfig";
 import { Customers } from "../Customers/Customers";
 import { useNotificationsContext } from "../../hooks/useNotificationsContext";
 import Slide from "@mui/material/Slide";
+import { CustomerDetail } from "../Customers/components/CustomerDetail";
 
 const SlideTransition = ({ children, ...props }: SlideProps) => {
   return <Slide children={children} {...props} direction="left" />;
@@ -44,6 +45,7 @@ export const Auth = () => {
             <Route path="/projects" element={<Projects />} />
             <Route path="/project-config" element={<ProjectConfig />} />
             <Route path="/customers" element={<Customers />} />
+            <Route path="/customers/:customerId" element={<CustomerDetail />} />
             <Route path="/users" element={<Users />} />
             <Route path="/site-config" element={<SiteConfig />} />
           </Routes>
