@@ -22,6 +22,9 @@ export const Sidebar = () => {
         "& .pro-sidebar-inner": {
           background: `${colors.greenAccent[900]} !important}`,
         },
+        "& .pro-sidebar.collapsed": {
+          width: "100px !important",
+        },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
         },
