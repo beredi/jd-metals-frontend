@@ -1,23 +1,38 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
-import { GridColDef, GridToolbar } from "@mui/x-data-grid";
+import { GridColDef, GridSelectionModel } from "@mui/x-data-grid";
 import { LoadingIndicator } from "../../components/LoadingIndicator";
 import { Box, Typography } from "@mui/material";
 import { Header } from "../../components/Header";
 import { CustomDataGrid } from "../../components/CustomDataGrid";
-import { Customer } from "../../types/Customer";
-import { FactoryOutlined, PersonOutlined } from "@mui/icons-material";
+import { Customer } from "./types/Customer";
+import {
+  Add,
+  Edit,
+  FactoryOutlined,
+  PersonOutlined,
+  Remove,
+} from "@mui/icons-material";
 import { useCustomersFetch } from "./hooks/useCustomersFetch";
 import { useNotificationsContext } from "../../hooks/useNotificationsContext";
+import {
+  CustomGridToolbar,
+  CustomMenuItem,
+} from "../../components/CustomGridToolbar";
+import { AddNewCustomerDialog } from "./components/AddNewCustomerDialog";
+import { initialCustomer } from "./types/Customer";
 
 export const Customers = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [customers, setCustomers] = useState<Customer[] | undefined>(undefined);
   const { setNotification } = useNotificationsContext();
-  const { getAllCustomers } = useCustomersFetch();
+  const { getAllCustomers, bulkDeleteCustomers } = useCustomersFetch();
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
+  const [selectedItems, setSelectedItems] = useState<GridSelectionModel>([]);
 
-  useEffect(() => {
+  const loadCustomers = () => {
     setIsLoading(true);
     getAllCustomers()
       .then((response) => {
@@ -29,6 +44,28 @@ export const Customers = () => {
         setNotification("error", t("loadFailed"));
       })
       .finally(() => setIsLoading(false));
+  };
+
+  const deleteCustomers = (ids: number[]) => {
+    setIsLoading(true);
+    bulkDeleteCustomers(ids)
+      .then((response) => {
+        if (response.status === 204) {
+          setNotification("success", t("bulkDeleteSuccess"));
+          loadCustomers();
+        } else {
+          setNotification("error", t("deleteFailed"));
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setNotification("error", t("deleteFailed"));
+      })
+      .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    loadCustomers();
   }, []);
 
   const columns: GridColDef[] = [
@@ -83,21 +120,84 @@ export const Customers = () => {
     },
   ];
 
+  const menuItems: CustomMenuItem[] = [
+    {
+      title: t("addNew") ?? "",
+      icon: <Add />,
+      action: () => setOpenDialog(true),
+    },
+    {
+      separator: true,
+    },
+    {
+      title: t("edit") ?? "",
+      icon: <Edit />,
+      action: () => setOpenEditDialog(true),
+      disabled: selectedItems.length !== 1,
+    },
+    {
+      title: t("deleteSelected") ?? "",
+      icon: <Remove />,
+      action: () => deleteCustomers(selectedItems as number[]),
+      disabled: selectedItems.length === 0,
+    },
+  ];
+
+  const handleClose = (refresh: boolean) => {
+    openEditDialog ? setOpenEditDialog(false) : setOpenDialog(false);
+    if (refresh) {
+      loadCustomers();
+    }
+  };
+
   return isLoading ? (
     <LoadingIndicator />
   ) : (
-    <Box m="20px">
-      <Header title={t("customers")} subtitle={t("customersSub")} />
-      {customers ? (
-        <CustomDataGrid
-          columns={columns}
-          rows={customers}
-          checkbox={true}
-          components={{ Toolbar: GridToolbar }}
+    <>
+      <Box m="20px">
+        <Header title={t("customers")} subtitle={t("customersSub")} />
+        {customers ? (
+          <CustomDataGrid
+            columns={columns}
+            rows={customers}
+            checkbox={true}
+            components={{
+              Toolbar: CustomGridToolbar,
+            }}
+            componentsProps={{
+              toolbar: {
+                selectedItems,
+                noSelectedActions: true,
+                menuItems,
+              },
+            }}
+            selectionModel={selectedItems}
+            onSelectionModelChange={(newItems: GridSelectionModel) => {
+              setSelectedItems(newItems);
+            }}
+          />
+        ) : (
+          <Typography variant="h3">{t("customersNoLoaded")}</Typography>
+        )}
+      </Box>
+      <AddNewCustomerDialog
+        title={t("addNewCustomer")}
+        open={openDialog}
+        onClose={handleClose}
+        customerData={initialCustomer}
+      />
+      {selectedItems.length === 1 && (
+        <AddNewCustomerDialog
+          title={t("editCustomer")}
+          open={openEditDialog}
+          onClose={handleClose}
+          customerData={
+            customers?.filter(
+              (customer) => customer.id === selectedItems[0]
+            )[0] ?? initialCustomer
+          }
         />
-      ) : (
-        <Typography variant="h3">{t("customersNoLoaded")}</Typography>
       )}
-    </Box>
+    </>
   );
 };

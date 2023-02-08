@@ -1,4 +1,4 @@
-import { Customer } from "../../../types/Customer";
+import { Customer } from "../../Customers/types/Customer";
 
 export type Project = {
   id: number;

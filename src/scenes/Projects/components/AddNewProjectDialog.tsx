@@ -1,5 +1,4 @@
-import { Box, TextField, useTheme } from "@mui/material";
-import { tokens } from "../../../theme";
+import { Box, TextField } from "@mui/material";
 import { CustomDialog } from "../../../components/CustomDialog";
 import { Formik, FormikValues } from "formik";
 import { ProjectCreate } from "../types/Project";
@@ -8,7 +7,7 @@ import { useTranslation } from "react-i18next";
 interface Props {
   title: string;
   open: boolean;
-  setOpen: (newOpen: boolean) => void;
+  onClose: () => void;
 }
 
 const initialProject: ProjectCreate = {
@@ -17,8 +16,6 @@ const initialProject: ProjectCreate = {
   customer_id: undefined,
 };
 export const AddNewProjectDialog = (props: Props) => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
   const { t } = useTranslation();
 
   const handleFormSubmit = (values: FormikValues) => {

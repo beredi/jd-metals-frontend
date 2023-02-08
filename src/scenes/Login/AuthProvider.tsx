@@ -4,7 +4,6 @@ import { LoginForm, LoginResponse } from "../../types/Login";
 import { User } from "../../types/User";
 import axios from "axios";
 import { API_BASE_URL } from "../../config";
-import { useFetch } from "../../hooks/useFetch";
 import { useNotificationsContext } from "../../hooks/useNotificationsContext";
 import { useTranslation } from "react-i18next";
 
@@ -19,7 +18,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loginError, setLoginError] = useState<boolean>(false);
   const { setNotification } = useNotificationsContext();
   const { t } = useTranslation();
-  const axiosInstance = useFetch();
 
   const logIn = (loginCredentials: LoginForm) => {
     setIsLoading(true);
@@ -56,10 +54,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setAuthToken(null);
   };
 
-  const getUserByEmail = (email: string) => {
+  const getUserByEmail = (email: string, token: string) => {
     setIsLoading(true);
-    axiosInstance
-      .post("api/getUserByEmail", { email: email })
+    axios
+      .post(
+        "api/getUserByEmail",
+        { email: email },
+        {
+          baseURL: API_BASE_URL,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         const data = response.data.data as unknown as User;
         setUser(data);
@@ -73,20 +80,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const checkLoggedIn = () => {
     const token = localStorage.getItem("jwtToken");
-    const userEmail = localStorage.getItem("userEmail");
+    const email = localStorage.getItem("userEmail");
 
     if (
       token !== null &&
       token !== undefined &&
       token !== "" &&
-      userEmail !== null &&
-      userEmail !== undefined &&
-      userEmail !== ""
+      email !== null &&
+      email !== undefined &&
+      email !== ""
     ) {
       setAuthToken(token);
       setIsAuthenticated(true);
-      getUserByEmail(userEmail);
       setNotification("success", t("loggedInSuccess"));
+      getUserByEmail(email, token);
     }
   };
 

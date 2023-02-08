@@ -99,7 +99,7 @@ export const Projects = () => {
 
   const menuItems: CustomMenuItem[] = [
     {
-      title: "Add new",
+      title: t("addNew") ?? "",
       icon: <Add />,
       action: () => setOpenDialog(true),
     },
@@ -145,7 +145,9 @@ export const Projects = () => {
       <AddNewProjectDialog
         title={t("addNewProject")}
         open={openDialog}
-        setOpen={setOpenDialog}
+        onClose={() => {
+          setOpenDialog(false);
+        }}
       />
     </Box>
   );

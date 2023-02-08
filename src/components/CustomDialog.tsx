@@ -6,19 +6,13 @@ interface Props {
   title: string;
   open: boolean;
   children: React.ReactNode;
-  setOpen: (newOpen: boolean) => void;
+  onClose: () => void;
 }
-export const CustomDialog = ({ children, title, open, setOpen }: Props) => {
+export const CustomDialog = ({ children, title, open, onClose }: Props) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (
-    <Dialog
-      open={open}
-      onClose={() => {
-        setOpen(false);
-      }}
-      fullWidth={true}
-    >
+    <Dialog open={open} onClose={onClose} fullWidth={true}>
       <Box>
         <Box
           sx={{
@@ -27,14 +21,14 @@ export const CustomDialog = ({ children, title, open, setOpen }: Props) => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            backgroundColor: `${colors.greenAccent[300]}`,
+            backgroundColor: `${colors.greenAccent[500]}`,
           }}
         >
           <Typography variant="h4" color={colors.grey[900]}>
             {title}
           </Typography>
           <Button
-            onClick={() => setOpen(false)}
+            onClick={onClose}
             variant="contained"
             sx={{
               backgroundColor: `${colors.redAccent[500]}`,
@@ -52,6 +46,7 @@ export const CustomDialog = ({ children, title, open, setOpen }: Props) => {
           sx={{
             padding: 2,
             minHeight: "30vh",
+            backgroundColor: `${colors.greenAccent[800]}`,
           }}
         >
           {children}
