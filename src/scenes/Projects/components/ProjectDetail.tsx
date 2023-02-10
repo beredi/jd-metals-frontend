@@ -1,40 +1,38 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { useProjectFetch } from "../hooks/useProjectFetch";
 import { useTranslation } from "react-i18next";
-import { Typography } from "@mui/material";
-import { useCustomersFetch } from "../hooks/useCustomersFetch";
 import { useCallback, useEffect, useState } from "react";
-import { Customer } from "../types/Customer";
+import { getProjectForEdit, Project } from "../types/Project";
 import { useNotificationsContext } from "../../../hooks/useNotificationsContext";
+import { DetailMenuItemType } from "../../../components/DetailMenuItem";
+import { Edit, Info, Remove } from "@mui/icons-material";
 import { LoadingIndicator } from "../../../components/LoadingIndicator";
-import { CustomerDetailInfo } from "./CustomerDetailInfo";
 import { DetailContainer } from "../../../components/DetailContainer";
 import { DetailInfoContainer } from "../../../components/DetailInfoContainer";
+import { ProjectDetailInfo } from "./ProjectDetailInfo";
+import { Typography } from "@mui/material";
 import { DetailBody } from "../../../components/DetailBody";
-import { AddNewCustomerDialog } from "./AddNewCustomerDialog";
-import { DetailMenuItemType } from "../../../components/DetailMenuItem";
-import { Edit, Info, List, Remove } from "@mui/icons-material";
-import { ProjectsForCustomer } from "./ProjectsForCustomer";
+import { AddNewProjectDialog } from "./AddNewProjectDialog";
 
-export const CustomerDetail = () => {
-  const { customerId } = useParams();
-  const { getCustomer, deleteCustomer } = useCustomersFetch();
+export const ProjectDetail = () => {
+  const { projectId } = useParams();
+  const { getProject, deleteProject } = useProjectFetch();
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [customer, setCustomer] = useState<Customer | undefined>(undefined);
-  const { setNotification } = useNotificationsContext();
+  const [project, setProject] = useState<Project | null>(null);
+  const navigate = useNavigate();
   const [showDetail, setShowDetail] = useState<boolean>(true);
   const [showDialog, setShowDialog] = useState<boolean>(false);
-  const [showCustomerProjects, setShowCustomerProjects] =
-    useState<boolean>(true);
-  const navigate = useNavigate();
+  const { setNotification } = useNotificationsContext();
 
-  const loadCustomer = useCallback(() => {
-    if (customerId) {
+  const loadProject = useCallback(() => {
+    if (projectId) {
       setIsLoading(true);
-      getCustomer(parseInt(customerId))
+
+      getProject(parseInt(projectId))
         .then((response) => {
           if (response.status === 200) {
-            setCustomer(response.data.data as Customer);
+            setProject(response.data.data as Project);
           } else {
             setNotification("error", t("loadFailed"));
           }
@@ -48,21 +46,21 @@ export const CustomerDetail = () => {
   }, []);
 
   useEffect(() => {
-    loadCustomer();
-  }, [loadCustomer]);
+    loadProject();
+  }, [loadProject]);
 
   const handleCloseDialog = (refresh: boolean) => {
     setShowDialog(false);
-    refresh && loadCustomer();
+    refresh && loadProject();
   };
 
-  const handleDeleteCustomer = (customerId: number) => {
+  const handleDeleteProject = (projectId: number) => {
     setIsLoading(true);
-    deleteCustomer(customerId)
+    deleteProject(projectId)
       .then((response) => {
         if (response.status === 204) {
           setNotification("success", t("deleteSuccess"));
-          navigate("/customers");
+          navigate("/projects");
         } else {
           setNotification("error", t("deleteFailed"));
         }
@@ -85,12 +83,7 @@ export const CustomerDetail = () => {
       hidden: true,
       text: t("delete"),
       icon: <Remove />,
-      onClick: () => handleDeleteCustomer(parseInt(customerId!)),
-    },
-    {
-      text: "Show / Hide Projects",
-      icon: <List />,
-      onClick: () => setShowCustomerProjects((prevState) => !prevState),
+      onClick: () => handleDeleteProject(parseInt(projectId!)),
     },
     {
       text: t("showHideDetails") ?? "",
@@ -101,33 +94,30 @@ export const CustomerDetail = () => {
 
   return isLoading ? (
     <LoadingIndicator />
-  ) : customer ? (
+  ) : project ? (
     <>
       <DetailContainer
-        title={`${t("customerDetail")} ${
-          customer.is_company === 1 ? customer.company_name : customer.name
-        }`}
-        subtitle={t("customerInfo")}
+        title={`${t("projectDetail")} ${project.name}`}
+        subtitle={t("projectInfo")}
       >
         {showDetail && (
           <DetailInfoContainer>
-            <CustomerDetailInfo customer={customer} />
+            <ProjectDetailInfo project={project} />
           </DetailInfoContainer>
         )}
-        <DetailBody showDetail={showDetail} customMenuItems={menuItems}>
-          {showCustomerProjects && (
-            <ProjectsForCustomer customerId={customer.id!} />
-          )}
-        </DetailBody>
+        <DetailBody
+          showDetail={showDetail}
+          customMenuItems={menuItems}
+        ></DetailBody>
       </DetailContainer>
-      <AddNewCustomerDialog
-        title={t("editCustomer")}
+      <AddNewProjectDialog
+        title={t("editProject")}
         open={showDialog}
         onClose={handleCloseDialog}
-        customerData={customer}
+        projectData={getProjectForEdit(project)}
       />
     </>
   ) : (
-    <Typography variant="h5">{t("noCustomerLoaded")}</Typography>
+    <Typography variant="h5">{t("noProjectLoaded")}</Typography>
   );
 };

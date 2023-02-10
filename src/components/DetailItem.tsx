@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import { toLower } from "lodash";
 
 interface Props {
   keyString: string;
@@ -13,7 +14,7 @@ export const DetailItem = ({ keyString, value }: Props) => {
         marginTop: 1,
       }}
     >
-      <Typography>{keyString}: </Typography>
+      <Typography>{toLower(keyString)}: </Typography>
       <Typography sx={{ marginLeft: 1, fontWeight: "bold" }}>
         {value}
       </Typography>

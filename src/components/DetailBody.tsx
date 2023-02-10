@@ -1,13 +1,12 @@
 import { Box } from "@mui/material";
 import { DetailMenuItemType } from "./DetailMenuItem";
-import { useTranslation } from "react-i18next";
 import { DetailMenu } from "./DetailMenu";
 import { ReactNode } from "react";
 
 interface Props {
   showDetail: boolean;
   customMenuItems: DetailMenuItemType[];
-  children: ReactNode;
+  children?: ReactNode;
 }
 export const DetailBody = ({
   showDetail,

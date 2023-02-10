@@ -10,6 +10,10 @@ export const useProjectFetch = () => {
     return axiosInstance.get("api/project-types");
   };
 
+  const getProject = (projectId: number) => {
+    return axiosInstance.get(`api/projects/${projectId}`);
+  };
+
   const createProject = (project: ProjectCreate) => {
     return axiosInstance.post("api/projects", project);
   };
@@ -21,6 +25,12 @@ export const useProjectFetch = () => {
     };
 
     return axiosInstance.post(`api/projects/${project.id}`, body);
+  };
+
+  const deleteProject = (projectId: number) => {
+    return axiosInstance.post(`api/projects/${projectId}`, {
+      _method: "DELETE",
+    });
   };
 
   const createProjectType = (projectType: ProjectType) => {
@@ -53,5 +63,7 @@ export const useProjectFetch = () => {
     updateProjectType,
     createProject,
     updateProject,
+    getProject,
+    deleteProject,
   };
 };

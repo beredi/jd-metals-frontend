@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useProjectFetch } from "./hooks/useProjectFetch";
 import { LoadingIndicator } from "../../components/LoadingIndicator";
-import { initialProject, Project, ProjectCreate } from "./types/Project";
+import { getProjectForEdit, initialProject, Project } from "./types/Project";
 import { GridColDef, GridSelectionModel } from "@mui/x-data-grid";
 import { Box, Tooltip, Typography } from "@mui/material";
 import { Header } from "../../components/Header";
@@ -15,6 +15,7 @@ import {
 import { AddNewProjectDialog } from "./components/AddNewProjectDialog";
 import { Add, Edit, Remove } from "@mui/icons-material";
 import { getCustomerTitleLabel } from "../Customers/types/Customer";
+import { useNavigate } from "react-router-dom";
 
 export const Projects = () => {
   const { t } = useTranslation();
@@ -25,6 +26,7 @@ export const Projects = () => {
   const [selectedItems, setSelectedItems] = useState<GridSelectionModel>([]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const loadProjects = useCallback(() => {
     setIsLoading(true);
@@ -139,20 +141,6 @@ export const Projects = () => {
     refresh && loadProjects();
   };
 
-  const getProjectForEdit = (project: Project): ProjectCreate => {
-    return {
-      id: project.id,
-      name: project.name,
-      description: project.description,
-      planned_end: project.planned_end,
-      planned_start: project.planned_start,
-      real_end: project.real_end,
-      real_start: project.real_start,
-      customer_id: project.customer?.id,
-      project_type_id: project.project_type?.id,
-    };
-  };
-
   return isLoading ? (
     <LoadingIndicator />
   ) : (
@@ -177,6 +165,9 @@ export const Projects = () => {
           onSelectionModelChange={(newItems: GridSelectionModel) => {
             setSelectedItems(newItems);
           }}
+          onRowDoubleClick={(rowData: Project) =>
+            navigate(`/projects/${rowData.id}`)
+          }
         />
       ) : (
         <Typography variant="h3">{t("projectsNoLoaded")}</Typography>

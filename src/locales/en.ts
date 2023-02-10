@@ -63,4 +63,10 @@ export const en = {
   realStart: "Real start",
   realEnd: "Real end",
   editProject: "Edit project",
+  projectDetail: "Detail of project",
+  projectInfo: "Information about the project",
+  noCustomerLoaded: "Customer wasn't loaded or loading failed.",
+  noProjectLoaded: "Project wasn't loaded or loading failed.",
+  customer: "Customer",
+  projectType: "Project type",
 };

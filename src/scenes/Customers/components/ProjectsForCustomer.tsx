@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Project } from "../../Projects/types/Project";
 import { useNotificationsContext } from "../../../hooks/useNotificationsContext";
 import { LoadingIndicator } from "../../../components/LoadingIndicator";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   customerId: number;
@@ -17,6 +18,8 @@ export const ProjectsForCustomer = ({ customerId }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [projects, setProjects] = useState<Project[] | undefined>(undefined);
   const { setNotification } = useNotificationsContext();
+  const navigate = useNavigate();
+
   const loadProjects = () => {
     setIsLoading(true);
     getProjectForCustomer(customerId)
@@ -85,7 +88,13 @@ export const ProjectsForCustomer = ({ customerId }: Props) => {
         padding: 2,
       }}
     >
-      <CustomDataGrid columns={columns} rows={projects} />
+      <CustomDataGrid
+        columns={columns}
+        rows={projects}
+        onRowDoubleClick={(rowData: Project) =>
+          navigate(`/projects/${rowData.id}`)
+        }
+      />
     </Box>
   ) : (
     <Typography variant="h3">{t("projectsNoLoaded")}</Typography>
