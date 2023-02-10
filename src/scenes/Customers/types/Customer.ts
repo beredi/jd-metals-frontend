@@ -22,3 +22,18 @@ export const initialCustomer: Customer = {
   address: "",
   company_name: "",
 };
+
+export const getCustomerTitleLabel = (customer: Customer) => {
+  let returnValue: string;
+  customer.is_company
+    ? (returnValue =
+        customer.company_name +
+        "(" +
+        customer.name +
+        " " +
+        customer.lastname +
+        ")")
+    : (returnValue = customer.name + " " + customer.lastname);
+
+  return returnValue;
+};

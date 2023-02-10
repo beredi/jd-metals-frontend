@@ -1,5 +1,5 @@
 import { useFetch } from "../../../hooks/useFetch";
-import { ProjectType } from "../types/Project";
+import { ProjectCreate, ProjectType } from "../types/Project";
 
 export const useProjectFetch = () => {
   const axiosInstance = useFetch();
@@ -8,6 +8,19 @@ export const useProjectFetch = () => {
   };
   const getAllProjectTypes = () => {
     return axiosInstance.get("api/project-types");
+  };
+
+  const createProject = (project: ProjectCreate) => {
+    return axiosInstance.post("api/projects", project);
+  };
+
+  const updateProject = (project: ProjectCreate) => {
+    const body = {
+      _method: "PUT",
+      ...project,
+    };
+
+    return axiosInstance.post(`api/projects/${project.id}`, body);
   };
 
   const createProjectType = (projectType: ProjectType) => {
@@ -38,5 +51,7 @@ export const useProjectFetch = () => {
     createProjectType,
     bulkDeleteProjectTypes,
     updateProjectType,
+    createProject,
+    updateProject,
   };
 };

@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useProjectFetch } from "./hooks/useProjectFetch";
 import { LoadingIndicator } from "../../components/LoadingIndicator";
-import { Project } from "./types/Project";
+import { initialProject, Project, ProjectCreate } from "./types/Project";
 import { GridColDef, GridSelectionModel } from "@mui/x-data-grid";
-import { Box, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import { Header } from "../../components/Header";
 import { useTranslation } from "react-i18next";
 import { CustomDataGrid } from "../../components/CustomDataGrid";
@@ -13,7 +13,8 @@ import {
   CustomMenuItem,
 } from "../../components/CustomGridToolbar";
 import { AddNewProjectDialog } from "./components/AddNewProjectDialog";
-import { Add, Remove } from "@mui/icons-material";
+import { Add, Edit, Remove } from "@mui/icons-material";
+import { getCustomerTitleLabel } from "../Customers/types/Customer";
 
 export const Projects = () => {
   const { t } = useTranslation();
@@ -23,8 +24,9 @@ export const Projects = () => {
   const { getAllProjects, bulkDeleteProjects } = useProjectFetch();
   const [selectedItems, setSelectedItems] = useState<GridSelectionModel>([]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
 
-  const loadProjects = () => {
+  const loadProjects = useCallback(() => {
     setIsLoading(true);
     getAllProjects()
       .then((response) => {
@@ -36,7 +38,7 @@ export const Projects = () => {
         setNotification("error", t("loadFailed"));
       })
       .finally(() => setIsLoading(false));
-  };
+  }, []);
 
   const deleteProjects = (ids: number[]) => {
     setIsLoading(true);
@@ -58,46 +60,56 @@ export const Projects = () => {
 
   useEffect(() => {
     loadProjects();
-  }, []);
+  }, [loadProjects]);
 
   const columns: GridColDef[] = [
-    { field: "name", headerName: "NAME", flex: 1 },
+    { field: "name", headerName: "NAME", width: 200 },
     {
       field: "description",
       headerName: "DESCRIPTION",
       flex: 1,
+      renderCell: ({ row: { description } }) => {
+        return (
+          <Tooltip title={description}>
+            <Typography>{description}</Typography>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      field: "customer",
+      headerName: "CUSTOMER",
+      width: 300,
+      renderCell: ({ row: { customer } }) => {
+        return (
+          <Typography>{customer && getCustomerTitleLabel(customer)}</Typography>
+        );
+      },
     },
     {
       field: "planned_start",
       headerName: "PLANNED START",
-      flex: 1,
     },
     {
       field: "planned_end",
       headerName: "PLANNED END",
-      flex: 1,
     },
     {
       field: "real_start",
       headerName: "REAL START",
-      flex: 1,
     },
     {
       field: "real_end",
       headerName: "REAL END",
-      flex: 1,
     },
     {
       field: "project_type",
       headerName: "TYPE",
-      flex: 1,
       renderCell: ({ row: { project_type } }) => {
-        return <Typography>{project_type.name}</Typography>;
+        return <Typography>{project_type && project_type.name}</Typography>;
       },
     },
   ];
-
-  console.log("projects", projects);
 
   const menuItems: CustomMenuItem[] = [
     {
@@ -109,12 +121,37 @@ export const Projects = () => {
       separator: true,
     },
     {
+      title: t("edit") ?? "",
+      icon: <Edit />,
+      action: () => setOpenEditDialog(true),
+      disabled: selectedItems.length !== 1,
+    },
+    {
       title: "Delete selected",
       icon: <Remove />,
       action: () => deleteProjects(selectedItems as number[]),
       disabled: selectedItems.length === 0,
     },
   ];
+
+  const handleClose = (refresh: boolean) => {
+    openEditDialog ? setOpenEditDialog(false) : setOpenDialog(false);
+    refresh && loadProjects();
+  };
+
+  const getProjectForEdit = (project: Project): ProjectCreate => {
+    return {
+      id: project.id,
+      name: project.name,
+      description: project.description,
+      planned_end: project.planned_end,
+      planned_start: project.planned_start,
+      real_end: project.real_end,
+      real_start: project.real_start,
+      customer_id: project.customer?.id,
+      project_type_id: project.project_type?.id,
+    };
+  };
 
   return isLoading ? (
     <LoadingIndicator />
@@ -147,10 +184,21 @@ export const Projects = () => {
       <AddNewProjectDialog
         title={t("addNewProject")}
         open={openDialog}
-        onClose={() => {
-          setOpenDialog(false);
-        }}
+        onClose={handleClose}
+        projectData={initialProject}
       />
+      {selectedItems.length === 1 && (
+        <AddNewProjectDialog
+          title={t("editProject")}
+          open={openEditDialog}
+          onClose={handleClose}
+          projectData={
+            getProjectForEdit(
+              projects?.filter((project) => project.id === selectedItems[0])[0]!
+            ) ?? initialProject
+          }
+        />
+      )}
     </Box>
   );
 };

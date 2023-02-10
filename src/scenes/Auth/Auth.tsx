@@ -19,6 +19,8 @@ import { Customers } from "../Customers/Customers";
 import { useNotificationsContext } from "../../hooks/useNotificationsContext";
 import Slide from "@mui/material/Slide";
 import { CustomerDetail } from "../Customers/components/CustomerDetail";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const SlideTransition = ({ children, ...props }: SlideProps) => {
   return <Slide children={children} {...props} direction="left" />;
@@ -29,42 +31,47 @@ export const Auth = () => {
 
   return isAuthenticated ? (
     <>
-      <CssBaseline />
-      <div className="app">
-        <Sidebar />
-        <main className={"content"}>
-          <Topbar />
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/team" element={<Team />} />
-            <Route path="/contacts" element={<Contacts />} />
-            <Route path="/invoices" element={<Invoices />} />
-            <Route path="/form" element={<Form />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/project-config" element={<ProjectConfig />} />
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/customers/:customerId" element={<CustomerDetail />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/site-config" element={<SiteConfig />} />
-          </Routes>
-        </main>
-      </div>
-      <Snackbar
-        open={open}
-        autoHideDuration={2000}
-        onClose={handleClose}
-        TransitionComponent={SlideTransition}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        sx={{
-          "& .MuiAlert-message": {
-            fontSize: "15px",
-          },
-        }}
-      >
-        <Alert severity={severity}>{message}</Alert>
-      </Snackbar>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <CssBaseline />
+        <div className="app">
+          <Sidebar />
+          <main className={"content"}>
+            <Topbar />
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/team" element={<Team />} />
+              <Route path="/contacts" element={<Contacts />} />
+              <Route path="/invoices" element={<Invoices />} />
+              <Route path="/form" element={<Form />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/project-config" element={<ProjectConfig />} />
+              <Route path="/customers" element={<Customers />} />
+              <Route
+                path="/customers/:customerId"
+                element={<CustomerDetail />}
+              />
+              <Route path="/users" element={<Users />} />
+              <Route path="/site-config" element={<SiteConfig />} />
+            </Routes>
+          </main>
+        </div>
+        <Snackbar
+          open={open}
+          autoHideDuration={2000}
+          onClose={handleClose}
+          TransitionComponent={SlideTransition}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          sx={{
+            "& .MuiAlert-message": {
+              fontSize: "15px",
+            },
+          }}
+        >
+          <Alert severity={severity}>{message}</Alert>
+        </Snackbar>
+      </LocalizationProvider>
     </>
   ) : (
     <Login />

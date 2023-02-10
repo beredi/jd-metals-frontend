@@ -58,4 +58,9 @@ export const en = {
   delete: "Delete",
   addNewProjectType: "Add new project type",
   editProjectType: "Edit project type",
+  plannedStart: "Planned start",
+  plannedEnd: "Planned end",
+  realStart: "Real start",
+  realEnd: "Real end",
+  editProject: "Edit project",
 };

@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
 import { useCustomersFetch } from "../hooks/useCustomersFetch";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Customer } from "../types/Customer";
 import { useNotificationsContext } from "../../../hooks/useNotificationsContext";
 import { LoadingIndicator } from "../../../components/LoadingIndicator";
@@ -25,10 +25,10 @@ export const CustomerDetail = () => {
   const [showDetail, setShowDetail] = useState<boolean>(true);
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [showCustomerProjects, setShowCustomerProjects] =
-    useState<boolean>(false);
+    useState<boolean>(true);
   const navigate = useNavigate();
 
-  const loadCustomer = () => {
+  const loadCustomer = useCallback(() => {
     if (customerId) {
       setIsLoading(true);
       getCustomer(parseInt(customerId))
@@ -45,11 +45,11 @@ export const CustomerDetail = () => {
         })
         .finally(() => setIsLoading(false));
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadCustomer();
-  }, []);
+  }, [loadCustomer]);
 
   const handleCloseDialog = (refresh: boolean) => {
     setShowDialog(false);
